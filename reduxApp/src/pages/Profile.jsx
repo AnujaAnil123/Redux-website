@@ -46,9 +46,11 @@ export default function Profile() {
         setImagePercent(Math.round(progress));
       },
       (error) => {
+        console.log(error)
         setImageError(true);
       },
-      () => {
+     async () => {
+      
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
           setFormData({ ...formData, profilePicture: downloadURL })
         );
