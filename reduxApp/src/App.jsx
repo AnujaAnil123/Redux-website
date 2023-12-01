@@ -4,23 +4,37 @@ import About from "./pages/About"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import Profile from "./pages/Profile"
-import Header from "./components/Header"
+
 import PrivateRoute from "./components/PrivateRoute"
+import AdminSignin from "./pages/adminSignIn"
+import AdminHome from "./pages/AdminHome"
+import ErrorBoundary from "./components/ErrorBoundary"
+import AdminPrivateRoute from "./components/AdminPrivateRoute"
 
 function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
-    <Header/>
+  
     <Routes>
       <Route  path="/" element={<Home />} />
+     
       <Route  path="/about" element={<About />} />
       <Route  path="/sign-in" element={<SignIn />} />
+      <Route  path="/admin-sign-in" element={<AdminSignin/>} />
       <Route  path="/sign-up" element={<SignUp />} />
       <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
+         
         </Route>
+        
+        <Route element={<AdminPrivateRoute />}>
+  <Route path="/admin-home" element={<AdminHome/>} />
+</Route>
+
     </Routes>
     </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 

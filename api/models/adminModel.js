@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-const userSchema = new mongoose.Schema({
-    username:{
+const AdminSchema = new mongoose.Schema({
+    adminName:{
         type:String,
         required:true,
         unique:true,
@@ -20,15 +20,9 @@ const userSchema = new mongoose.Schema({
         type:String,
         default: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
-        required:true,
-    },
-    
   
 },{timestamps:true});
 
-const User = mongoose.model('User', userSchema);
+const Admin = mongoose.model('Admin', userSchema);
 
-export default User;
+export default Admin;

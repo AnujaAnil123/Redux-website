@@ -1,16 +1,15 @@
 import { useState ,useEffect} from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  Link, useNavigate } from 'react-router-dom';
 import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from '../redux/user/userSlice';
+  adminSigninStart,
+  adminSigninSuccess,
+  adminSigninFailure,
+} from '../redux/admin/adminSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import OAuth from '../components/OAuth';
-import Header from '../components/Header';
-export default function SignIn() {
+import AdminHeader from '../components/AdminHeader';
+
+
+export default function AdminSignIn() {
   const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
   const [isVisible, setIsVisible] = useState(true);
@@ -21,21 +20,21 @@ export default function SignIn() {
   };
   useEffect(() => {
     if (error) {
-      // Clear the error after 5 seconds
+      
       const errorTimer = setTimeout(() => {
         setIsVisible(false);
-        dispatch(signInFailure(null));
+        dispatch(adminSigninFailure(null));
       }, 5000);
 
-      // Cleanup the timer when the component unmounts or when a new error occurs
+      
       return () => clearTimeout(errorTimer);
     }
   }, [error, dispatch]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart());
-      const res = await fetch('/api/auth/signin', {
+      dispatch(adminSigninStart());
+      const res = await fetch('/api/admin/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,21 +42,23 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      
       if (data.success === false) {
-        dispatch(signInFailure(data));
+        dispatch(adminSigninFailure(data));
         return;
       }
-      dispatch(signInSuccess(data));
-      navigate('/');
+      dispatch(adminSigninSuccess(data));
+      navigate('/admin-home');
     } catch (error) {
-      dispatch(signInFailure(error));
+      dispatch(adminSigninFailure(error));
     }
   };
+
+  
   return (
-    <div>  <Header/>
+  <div>
+    <AdminHeader/>
     <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
+      <h1 className='text-3xl text-center font-semibold my-7'>Admin Sign In</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           type='email'
@@ -73,28 +74,20 @@ export default function SignIn() {
           className='bg-slate-100 p-3 rounded-lg'
           onChange={handleChange}
         />
-        <button
+        <button type='submit'
           disabled={loading}
           className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
         >
           {loading ? 'Loading...' : 'Sign In'}
         </button>
-        <OAuth />
+      
       </form>
-      <div className='flex gap-2 mt-5'>
-        <p>Dont Have an account?</p>
-        <Link to='/sign-up'>
-          <span className='text-blue-500'>Sign up</span>
+      <Link to='/sign-in'>
+          <span className='text-blue-500'>User Sign In</span>
         </Link>
-      </div>
-      <Link to='/admin-sign-in'>
-          <span className='text-blue-500'>Admin Sign In</span>
-        </Link>
-        <ToastContainer autoClose={2000}/>
         <p className={`text-red-700 mt-5 transition-opacity ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-        {error ? toast(error.message) || 'Something went wrong!' : ''}
+        {error ? error.message || 'Something went wrong!' : ''}
       </p>
-
     </div>
     </div>
   );
