@@ -7,6 +7,7 @@ class ErrorBoundary extends Component {
   }
 
   static getDerivedStateFromError(error) {
+    console.log(error)
     return { hasError: true };
   }
 
@@ -20,7 +21,8 @@ class ErrorBoundary extends Component {
       return <div>Error occurred. Please try again.</div>;
     }
 
-    return this.props.children;
+    return this.props.children
+
   }
 }
 
